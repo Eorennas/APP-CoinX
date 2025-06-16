@@ -8,31 +8,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final StreamController<Map<String, double>> _controller = StreamController();
+  Map<String, double>? _cotacoes;
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _carregarCotacoes(); // carrega imediatamente
-    _timer = Timer.periodic(Duration(seconds: 60), (_) => _carregarCotacoes());
+    _carregarCotacoes(); // carregar logo ao abrir
+    _timer = Timer.periodic(Duration(seconds: 10), (_) => _carregarCotacoes()); // a cada 10s
   }
 
-  void _carregarCotacoes() async {
+  Future<void> _carregarCotacoes() async {
     try {
       final valores = await BitcoinService.getMultiplasCotacoes();
-      _controller.add(valores);
+      setState(() {
+        _cotacoes = valores;
+      });
     } catch (e) {
-      print('ERRO: $e'); // <-- ADICIONE ISSO
-      _controller.addError('Erro ao carregar cotações');
+      print('Erro ao buscar cotações: $e');
     }
   }
-
 
   @override
   void dispose() {
     _timer?.cancel();
-    _controller.close();
     super.dispose();
   }
 
@@ -42,46 +41,40 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ListTile(
         leading: Icon(icon, size: 32, color: cor),
-        title: Text(nome, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        subtitle: Text('R\$ ${valor.toStringAsFixed(6)}', style: TextStyle(fontSize: 16)),
+        title: Text(
+          nome,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          'R\$ ${valor.toStringAsFixed(6)}',
+          style: TextStyle(fontSize: 16),
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Map<String, double>>(
-      stream: _controller.stream,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
+    if (_cotacoes == null) {
+      return Center(child: CircularProgressIndicator());
+    }
 
-        if (snapshot.hasError) {
-          return Center(child: Text('Erro ao carregar dados'));
-        }
-
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('Nenhuma cotação disponível'));
-        }
-
-        final data = snapshot.data!;
-
-        return ListView(
-          children: [
-            SizedBox(height: 16),
-            Center(
-              child: Text(
-                'Cotações ao Vivo',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            _buildCard('Bitcoin', data['Bitcoin']!, Icons.currency_bitcoin, Colors.orange),
-            _buildCard('Ethereum', data['Ethereum']!, Icons.token, Colors.blue),
-            _buildCard('Solana', data['Solana']!, Icons.monetization_on, Colors.green),
-          ],
-        );
-      },
+    return ListView(
+      children: [
+        SizedBox(height: 16),
+        Center(
+          child: Text(
+            'Cotações ao vivo',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+        _buildCard('Bitcoin', _cotacoes!['Bitcoin']!, Icons.currency_bitcoin,
+            Colors.orange),
+        _buildCard('Ethereum', _cotacoes!['Ethereum']!, Icons.token,
+            Colors.blue),
+        _buildCard('Solana', _cotacoes!['Solana']!, Icons.monetization_on,
+            Colors.green),
+      ],
     );
   }
 }
