@@ -1,16 +1,46 @@
-# coin_x
+# 📱 CoinX
 
-A new Flutter project.
+Um aplicativo de controle financeiro pessoal e cotações de criptomoedas, desenvolvido com **Flutter**.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🔍 Descrição
 
-A few resources to get you started if this is your first Flutter project:
+**CoinX** é um app mobile que permite:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Acompanhar cotações ao vivo de **Bitcoin**, **Ethereum** e **Solana**, atualizadas automaticamente a cada 10 segundos.
+- Registrar **gastos pessoais** com descrição, valor e data atual.
+- Ver uma **lista dos seus gastos** com datas e valores formatados.
+- Observar o **total de gastos do mês** atual diretamente na tela.
+- Alternar entre **modo escuro e claro** com um botão no AppBar.
+- Usar o app em **smartphones e tablets**, com layout adaptável.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## ✨ Funcionalidades
+
+- 🔁 Cotações de cripto atualizadas automaticamente (10s)
+- 💸 Cadastro rápido de despesas
+- 📋 Lista de gastos com datas e ícones
+- 🧾 Totalizador mensal no final da lista
+- 🌗 Alternância entre tema claro e escuro
+- ⏳ SplashScreen com animação ao iniciar
+- ✅ Responsivo para tablets e celulares
+
+---
+
+## 🚀 Pré-requisitos
+
+- Flutter SDK (>= 3.10)
+- Android Studio ou VS Code com plugin Flutter
+- Emulador ou dispositivo Android/iOS
+
+---
+
+## 📦 Instalação e Execução Local
+
+```bash
+git clone https://github.com/seu_usuario/coinx.git
+cd coinx
+flutter pub get
+flutter run
